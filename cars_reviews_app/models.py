@@ -165,9 +165,11 @@ class NoticiaDiferente(models.Model):
         indexes = [
             models.Index(fields=['fecha_creacion']),  # Si deseas un índice en la fecha de creación
         ]
-    def clean(self):
-        if len(self.titulo) > 2255:
-            raise ValidationError("El título excede el máximo de 2255 caracteres.")
+    def save(self, *args, **kwargs):
+        # Truncar el título si excede los 100 caracteres
+        if len(self.titulo) > 100:
+            self.titulo = self.titulo[:100]
+        super().save(*args, **kwargs)
         
     def __str__(self):
         return self.titulo

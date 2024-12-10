@@ -1,5 +1,6 @@
 # models.py
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class Comment(models.Model):
     name = models.CharField(max_length=100)
@@ -155,7 +156,7 @@ class Noticia(models.Model):
 
 
 class NoticiaDiferente(models.Model):
-    titulo = models.CharField(max_length=255)
+    titulo = models.CharField(max_length=2255)
     link = models.URLField()
     img_url = models.ImageField(upload_to='other_images/', blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -164,7 +165,10 @@ class NoticiaDiferente(models.Model):
         indexes = [
             models.Index(fields=['fecha_creacion']),  # Si deseas un índice en la fecha de creación
         ]
-    
+    def clean(self):
+        if len(self.titulo) > 2255:
+            raise ValidationError("El título excede el máximo de 2255 caracteres.")
+        
     def __str__(self):
         return self.titulo
     

@@ -14,3 +14,12 @@ git push -u origin main
 git remote add origin https://github.com/simonTemplarFilipMorris/cars_reviews.git
 git branch -M main
 git push -u origin main
+
+postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:5432/${{PGDATABASE}}
+
+
+postgresql://postgres:nzfvVdaTXfiOUImwCxyMNqKunYyuysGH@autorack.proxy.rlwy.net:41705/railway
+
+PGPASSWORD=nzfvVdaTXfiOUImwCxyMNqKunYyuysGH psql -h autorack.proxy.rlwy.net -U postgres -p 41705 -d railway
+
+

@@ -18,7 +18,8 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 #DATABASE_URL = 'postgresql://postgres:dEABbCgyqqXRNQvxJZwlKeFtzcCjYFSg@postgres.railway.internal:5432/railway'
-DATABASE_URL = 'postgresql://postgres:nzfvVdaTXfiOUImwCxyMNqKunYyuysGH@autorack.proxy.rlwy.net:41705/railwayy'
+#DATABASE_URL = 'postgresql://postgres:nzfvVdaTXfiOUImwCxyMNqKunYyuysGH@postgres.railway.internal:5432/railway'
+DATABASE_URL = 'postgresql://postgres:nzfvVdaTXfiOUImwCxyMNqKunYyuysGH@autorack.proxy.rlwy.net:41705/railway'
 
 
 # Quick-start development settings - unsuitable for production
@@ -103,7 +104,7 @@ DATABASES = {
 }
 """
 
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -114,11 +115,11 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+"""
 
-
-""" DATABASES = {
+DATABASES = {
     'default': dj_database_url.config(default=DATABASE_URL)
-} """
+} 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

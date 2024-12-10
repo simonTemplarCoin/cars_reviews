@@ -13,7 +13,7 @@ class Comment(models.Model):
         return f'{self.name} - {self.created_at}'
 
 class CommentMotorpasion(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=500)
     email = models.EmailField()
     website = models.URLField(blank=True, null=True)
     message = models.TextField()

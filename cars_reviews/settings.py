@@ -45,7 +45,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 ALLOWED_HOSTS = ['web-production-aa1e.up.railway.app', 'localhost', '127.0.0.1']
 
-#ALLOWED_HOSTS = ['*']
+# CSRF_TRUSTED_ORIGINS = []
+# SECURE_SSL_REDIRECT = False
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
+# USE_X_FORWARDED_HOST = False
+# ALLOWED_HOSTS = ['*']
 
 
 # Application definition

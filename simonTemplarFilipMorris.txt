@@ -115,3 +115,12 @@ git credential-manager reject https://github.com
 https://github.com/login/device/select_account
 
 
+http://127.0.0.1:8000/
+
+https://127.0.0.1:8000/
+
+https://127.0.0.1:8000/
+
+https://127.0.0.1:8000/admin/cars_reviews_app/noticiadiferente/
+
+http://127.0.0.1:8000/

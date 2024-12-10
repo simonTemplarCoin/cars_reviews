@@ -170,7 +170,7 @@ def custom_logout_view(request):
     return redirect('home') 
 
 
-def home(request):
+def home_old(request):
     fecha_actual = datetime.now().strftime('%A, %B %d, %Y')  # Ejemplo: Monday, January 01, 2045
     locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Configura a español
     fecha_actual_es = datetime.now().strftime('%A, %d de %B de %Y') 
@@ -178,7 +178,22 @@ def home(request):
     context = {'fecha_actual':fecha_actual,'fecha_actual_es':fecha_actual_es,'fecha_hora_actual':fecha_hora_actual}
     return render(request, 'cars_reviews_app/home.html',context)
 
-
+def home(request):
+    fecha_actual = datetime.now().strftime('%A, %B %d, %Y')  # Ejemplo: Monday, January 01, 2045
+    try:
+        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Configura a español
+        fecha_actual_es = datetime.now().strftime('%A, %d de %B de %Y') 
+    except locale.Error:
+        # Si no se puede establecer el locale, usa un formato alternativo
+        fecha_actual_es = datetime.now().strftime('%A, %d of %B of %Y')
+    
+    fecha_hora_actual = datetime.now().strftime('%A, %B %d, %Y %I:%M:%S %p') 
+    context = {
+        'fecha_actual': fecha_actual,
+        'fecha_actual_es': fecha_actual_es,
+        'fecha_hora_actual': fecha_hora_actual
+    }
+    return render(request, 'cars_reviews_app/home.html', context)
 
 def home_imdb(request):
     url = "https://www.imdb.com/chart/moviemeter/"

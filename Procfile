@@ -1,0 +1,1 @@
+web: gunicorn cars_reviews.wsgi --log-file -

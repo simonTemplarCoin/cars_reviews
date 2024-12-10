@@ -90,5 +90,18 @@ git push -u origin main
 
 git remote set-url origin https://github.com/simonTemplarCoin/cars_reviews.git
 
+git remote remove new-origin
+
 
 git remote add new-origin https://github.com/simonTemplarCoin/cars_reviews.git
+
+git config user.name
+git config user.email
+
+git config --global user.name "tu_nombre_de_usuario"
+git config --global user.email "tu_email@dominio.com"
+
+git config --global user.name simonTemplarCoin  
+
+ git config --global user.name simonCoin
+(venv) PS C:\proyectos_python_django\cars_reviews> git config --global user.mail msb.coin@gmail.com

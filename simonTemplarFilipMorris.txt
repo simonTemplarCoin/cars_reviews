@@ -105,3 +105,13 @@ git config --global user.name simonTemplarCoin
 
  git config --global user.name simonCoin
 (venv) PS C:\proyectos_python_django\cars_reviews> git config --global user.mail msb.coin@gmail.com
+
+git credential-manager reject https://github.com
+
+
+0670-27A8
+
+
+https://github.com/login/device/select_account
+
+

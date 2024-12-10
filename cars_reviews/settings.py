@@ -19,7 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 #DATABASE_URL = 'postgresql://postgres:dEABbCgyqqXRNQvxJZwlKeFtzcCjYFSg@postgres.railway.internal:5432/railway'
 #DATABASE_URL = 'postgresql://postgres:nzfvVdaTXfiOUImwCxyMNqKunYyuysGH@postgres.railway.internal:5432/railway'
-DATABASE_URL = 'postgresql://postgres:nzfvVdaTXfiOUImwCxyMNqKunYyuysGH@autorack.proxy.rlwy.net:41705/railway'
+#DATABASE_URL = 'postgresql://postgres:nzfvVdaTXfiOUImwCxyMNqKunYyuysGH@autorack.proxy.rlwy.net:41705/railway'
+#DATABASE_URL = 'postgresql://postgres:kCRgNJRPimacZdhNVMFpiSTLpEbxnowi@postgres.railway.internal:5432/railway'
+DATABASE_URL = 'postgresql://postgres:kCRgNJRPimacZdhNVMFpiSTLpEbxnowi@autorack.proxy.rlwy.net:23449/railway'
 
 
 # Quick-start development settings - unsuitable for production
@@ -33,7 +35,7 @@ DEBUG = True
 
 #para desplegar en railway hay que descomentar esto de abajo y para local hay que comentarlo
 
-CSRF_TRUSTED_ORIGINS = ['https://web-production-85c59.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-aa1e.up.railway.app']
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
@@ -41,7 +43,7 @@ USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
-ALLOWED_HOSTS = ['web-production-85c59.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['web-production-aa1e.up.railway.app', 'localhost', '127.0.0.1']
 
 #ALLOWED_HOSTS = ['*']
 
@@ -110,7 +112,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'nzfvVdaTXfiOUImwCxyMNqKunYyuysGH',
+        'PASSWORD': 'kCRgNJRPimacZdhNVMFpiSTLpEbxnowi',
         'HOST': 'postgres.railway.internal',
         'PORT': '5432',
     }

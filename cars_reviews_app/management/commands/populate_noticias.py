@@ -38,10 +38,22 @@ class Command(BaseCommand):
         #     )
 
         #Guarda las noticias de Motorpasion en la base de datos
+        # for noticia in noticias_motorpasion:
+        #     print(f"Guardando noticia de Motorpasion: {noticia['titulo']}")  # Imprime para depurar
+        #     NoticiaDiferente.objects.get_or_create(
+        #         titulo=noticia['titulo'],
+        #         link=noticia['link'],
+        #         img_url=noticia['img_url']
+        #     )
+        
         for noticia in noticias_motorpasion:
-            print(f"Guardando noticia de Motorpasion: {noticia['titulo']}")  # Imprime para depurar
+            print(f"Guardando noticia de Motorpasion: {noticia['titulo']}")  # Para depurar
+            
+            # Truncar el título si excede los 100 caracteres
+            titulo_truncado = noticia['titulo'][:90] if len(noticia['titulo']) > 100 else noticia['titulo']
+            
             NoticiaDiferente.objects.get_or_create(
-                titulo=noticia['titulo'],
+                titulo=titulo_truncado,
                 link=noticia['link'],
                 img_url=noticia['img_url']
             )

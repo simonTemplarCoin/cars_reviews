@@ -168,7 +168,7 @@ class NoticiaDiferente(models.Model):
     def save(self, *args, **kwargs):
         # Truncar el título si excede los 100 caracteres
         if len(self.titulo) > 100:
-            self.titulo = self.titulo[:100]
+            self.titulo = self.titulo[:90]
         super().save(*args, **kwargs)
         
     def __str__(self):

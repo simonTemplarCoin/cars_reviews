@@ -35,22 +35,22 @@ DEBUG = True
 
 #para desplegar en railway hay que descomentar esto de abajo y para local hay que comentarlo
 
-# CSRF_TRUSTED_ORIGINS = ['https://web-production-aa1e.up.railway.app']
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT = True
-# USE_X_FORWARDED_HOST = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = ['https://web-production-aa1e.up.railway.app']
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
-# ALLOWED_HOSTS = ['web-production-aa1e.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['web-production-aa1e.up.railway.app', 'localhost', '127.0.0.1']
 
 # CSRF_TRUSTED_ORIGINS = []
 # SECURE_SSL_REDIRECT = False
 # SESSION_COOKIE_SECURE = False
 # CSRF_COOKIE_SECURE = False
 # USE_X_FORWARDED_HOST = False
-ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['*']
 
 
 # Application definition

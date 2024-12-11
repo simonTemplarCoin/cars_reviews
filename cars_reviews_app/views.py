@@ -460,7 +460,7 @@ def contact(request):
     return render(request, 'cars_reviews_app/contact.html', {'form': form})
 
 def lista_noticias(request):
-    noticias = Noticia.objects.order_by('-fecha_creacion')
+    #noticias = Noticia.objects.order_by('-fecha_creacion')
     noticias_diferentes = NoticiaDiferente.objects.order_by('-fecha_creacion')
 
     name = request.user.username
@@ -475,4 +475,4 @@ def lista_noticias(request):
             
     print("hola : " + str(todas_noticias_diferentes.paginator.num_pages))
 
-    return render(request, 'cars_reviews_app/listar_noticias.html', {'noticias_diferentes': noticias_diferentes,  'todas_noticias_diferentes' : todas_noticias_diferentes, 'noticias': noticias})
+    return render(request, 'cars_reviews_app/listar_noticias.html', {'noticias_diferentes': noticias_diferentes,  'todas_noticias_diferentes' : todas_noticias_diferentes})

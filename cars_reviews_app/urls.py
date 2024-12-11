@@ -40,6 +40,7 @@ urlpatterns = [
     path('autocar/', views.autocar_view, name='autocar'),
     path('autonews/', views.autonews_view, name='autonews'),
     path('buscar_noticias/', views.buscar_noticias, name='buscar_noticias'),
+    path('populate-noticias/', views.populate_noticias, name='populate_noticias'),
 
 
 

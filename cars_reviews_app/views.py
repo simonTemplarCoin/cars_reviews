@@ -15,6 +15,8 @@ import time
 import json
 from django.core.paginator import Paginator
 
+from django.http import JsonResponse
+from django.core.management import call_command
 
 # from cars_reviews_app.scraper import (
 #     obtener_noticias_scraping,
@@ -27,6 +29,14 @@ from django.core.paginator import Paginator
 
 
 # Create your views here.
+
+
+def populate_noticias(request):
+    try:
+        call_command('populate_noticias')  # Nombre de tu comando
+        return JsonResponse({'message': 'El scraping se completó correctamente.'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 def buscar_noticias(request):
     query = request.GET.get('q', '')  # Captura el término de búsqueda
@@ -465,4 +475,4 @@ def lista_noticias(request):
             
     print("hola : " + str(todas_noticias_diferentes.paginator.num_pages))
 
-    return render(request, 'cars_reviews_app/listar_noticias.html', {'noticias_diferentes': noticias_diferentes,  'todas_noticias_diferentes' : todas_noticias_diferentes, 'noticias': noticias, 'noticias_diferentes':noticias_diferentes})
+    return render(request, 'cars_reviews_app/listar_noticias.html', {'noticias_diferentes': noticias_diferentes,  'todas_noticias_diferentes' : todas_noticias_diferentes, 'noticias': noticias})

@@ -157,19 +157,19 @@ class Noticia(models.Model):
 
 class NoticiaDiferente(models.Model):
     titulo = models.CharField(max_length=2255)
-    link = models.URLField()
-    img_url = models.ImageField(upload_to='other_images/', blank=True, null=True)
+    link = models.URLField(max_length=500)
+    img_url = models.ImageField(upload_to='other_images/', max_length=500, blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         indexes = [
             models.Index(fields=['fecha_creacion']),  # Si deseas un índice en la fecha de creación
         ]
-    def save(self, *args, **kwargs):
-        # Truncar el título si excede los 100 caracteres
-        if len(self.titulo) > 100:
-            self.titulo = self.titulo[:90]
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Truncar el título si excede los 100 caracteres
+    #     if len(self.titulo) > 100:
+    #         self.titulo = self.titulo[:90]
+    #     super().save(*args, **kwargs)
         
     def __str__(self):
         return self.titulo

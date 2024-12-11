@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import time
 import requests
 from selenium.webdriver.chrome.options import Options
+from django.core.management.base import BaseCommand
+from cars_reviews_app.models import NoticiaDiferente
 
 
 def obtener_noticias_scraping_otro():
@@ -213,6 +215,83 @@ def obtener_noticias_scraping_2():
     
     return noticias_info
 
+def obtener_noticias_scraping_directo():
+    url = "https://www.motorpasion.com"
+
+    # Configura el navegador en modo sin cabeza (headless)
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
+
+    # Abre la página
+    driver.get(url)
+    
+    # Espera unos segundos para asegurarse de que todo el contenido se haya cargado
+    time.sleep(5)
+
+    # Guarda el HTML de la página en un archivo
+    with open("pagina_guardada.html", "w", encoding="utf-8") as f:
+        f.write(driver.page_source)
+    print("HTML guardado correctamente en 'pagina_guardada.html'")
+
+    # Obtén el contenido de la página después de cargar JavaScript
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+
+    # Encuentra todos los artículos en la página
+    articulos = soup.find_all('article', class_='recent-abstract abstract-article')
+
+    # Contador para estadísticas
+    noticias_guardadas = 0
+    noticias_omitidas = 0
+
+    for articulo in articulos:
+        # Título
+        title_tag = articulo.find('h2', class_='abstract-title')
+        titulo = title_tag.get_text(strip=True) if title_tag else "No title"
+
+        # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+        # if len(titulo) > 100:
+        #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+        #     noticias_omitidas += 1
+        #     continue
+
+        # Enlace del artículo
+        link_tag = title_tag.find('a') if title_tag else None
+        link = link_tag['href'] if link_tag else "No link"
+
+        # Asegura que el enlace sea completo
+        if link and not link.startswith('http'):
+            link = url + link
+
+        # Imagen: intenta obtener la mejor calidad disponible en <source> o <img>
+        picture_tag = articulo.find('picture')
+        img_url = None
+
+        if picture_tag:
+            source_tag = picture_tag.find('source', media="(min-width: 767px)")
+            if source_tag and 'srcset' in source_tag.attrs:
+                img_url = source_tag['srcset']
+
+        if not img_url:
+            img_tag = articulo.find('img')
+            img_url = img_tag['src'] if img_tag and 'src' in img_tag.attrs else 'https://img.remediosdigitales.com/3999ac/prop3-1/150_150.png'
+
+        # Guardar en la base de datos usando `get_or_create`
+        titulo_truncado = titulo[:20] if len(titulo) > 20 else titulo
+        titulo_truncado = titulo
+        _, created = NoticiaDiferente.objects.get_or_create(
+            titulo=titulo_truncado,
+            link=link,
+            img_url=img_url
+        )
+
+        if created:
+            noticias_guardadas += 1
+
+    driver.quit()
+    print(f"Noticias procesadas: {len(articulos)} | Guardadas: {noticias_guardadas} | Omitidas: {noticias_omitidas}")
+
+
 
 def obtener_noticias_scraping():
     url = "https://www.motorpasion.com"
@@ -246,6 +325,11 @@ def obtener_noticias_scraping():
         # Título
         title_tag = articulo.find('h2', class_='abstract-title')
         titulo = title_tag.get_text(strip=True) if title_tag else "No title"
+
+         # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+        # if len(titulo) > 100:
+        #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+        #     continue  # Salta a la siguiente iteración
         
         # Enlace del artículo
         link_tag = title_tag.find('a') if title_tag else None
@@ -330,6 +414,10 @@ def obtener_noticias_scraping_carscoop():
 
     # Encuentra todos los artículos en la página (para la primera sección de noticias)
     articulos = soup.find_all('div', class_='card-wrapper')
+
+     # Contador para estadísticas
+    noticias_guardadas = 0
+    noticias_omitidas = 0
     
     # Lista para almacenar las noticias de la primera sección
     noticias_info = []
@@ -358,6 +446,11 @@ def obtener_noticias_scraping_carscoop():
         # Extraer el título
         titulo_tag = articulo.find('h2', class_='title')
         titulo = titulo_tag.text.strip() if titulo_tag else "Sin título"
+
+         # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+        # if len(titulo) > 100:
+        #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+        #     continue  # Salta a la siguiente iteración
         
         # Extraer el enlace
         enlace_tag = articulo.find('a')
@@ -367,11 +460,23 @@ def obtener_noticias_scraping_carscoop():
         img_tag = articulo.find('img')
         img_url = img_tag['src'] if img_tag and 'src' in img_tag.attrs else 'https://www.carscoops.com/wp-content/uploads/2022/12/Carscoops-Logo-White.jpg'
         
-        noticias_info.append({
-            'titulo': titulo,
-            'link': enlace,
-            'img_url': img_url
-        })
+        # noticias_info.append({
+        #     'titulo': titulo,
+        #     'link': enlace,
+        #     'img_url': img_url
+        # })
+
+        _, created = NoticiaDiferente.objects.get_or_create(
+            titulo=titulo,
+            link=enlace,
+            img_url=img_url
+        )
+
+        if created:
+            noticias_guardadas += 1
+
+    driver.quit()
+    print(f"Noticias procesadas: {len(articulos)} | Guardadas: {noticias_guardadas} | Omitidas: {noticias_omitidas}")
 
 
     # Encuentra todos los artículos en la página (para la segunda sección de noticias)
@@ -425,12 +530,12 @@ def obtener_noticias_scraping_carscoop():
     #         'fecha': date
     #     })
     
-    driver.quit()
+    # driver.quit()
     
-    # Imprimir las noticias procesadas
-    print(f"Noticias procesadas: {len(noticias_info)} noticias.")
+    # # Imprimir las noticias procesadas
+    # print(f"Noticias procesadas: {len(noticias_info)} noticias.")
     
-    return noticias_info
+    #return noticias_info
 
 
 def obtener_noticias_scraping_insideevs():
@@ -458,6 +563,10 @@ def obtener_noticias_scraping_insideevs():
     # Encuentra todos los artículos en la página
     articulos = soup.find_all('article')
     
+     # Contador para estadísticas
+    noticias_guardadas = 0
+    noticias_omitidas = 0
+
     # Lista para almacenar las noticias
     noticias_info = []
     
@@ -465,6 +574,11 @@ def obtener_noticias_scraping_insideevs():
         # Extraer el título
         titulo_tag = articulo.find('h2')
         titulo = titulo_tag.text.strip() if titulo_tag else "Sin título"
+
+         # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+        # if len(titulo) > 100:
+        #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+        #     continue  # Salta a la siguiente iteración
         
         # Extraer el enlace
         enlace_tag = articulo.find('a')
@@ -478,18 +592,30 @@ def obtener_noticias_scraping_insideevs():
         if enlace and enlace.startswith('/'):
             enlace = url + enlace.lstrip('/')
         
-        noticias_info.append({
-            'titulo': titulo,
-            'link': enlace,
-            'img_url': img_url
-        }) 
+    #     noticias_info.append({
+    #         'titulo': titulo,
+    #         'link': enlace,
+    #         'img_url': img_url
+    #     }) 
     
+    # driver.quit()
+    
+    # # Imprimir las noticias procesadas
+    # print(f"Noticias procesadas: {len(noticias_info)} noticias.")
+    
+    # return noticias_info
+
+        _, created = NoticiaDiferente.objects.get_or_create(
+                titulo=titulo,
+                link=enlace,
+                img_url=img_url
+            )
+
+        if created:
+            noticias_guardadas += 1
+
     driver.quit()
-    
-    # Imprimir las noticias procesadas
-    print(f"Noticias procesadas: {len(noticias_info)} noticias.")
-    
-    return noticias_info
+    print(f"Noticias procesadas: {len(articulos)} | Guardadas: {noticias_guardadas} | Omitidas: {noticias_omitidas}")
 
 
 
@@ -518,6 +644,10 @@ def obtener_noticias_scraping_carmagazine_co_uk():
     
     # Encuentra todos los artículos en la página
     articulos = soup.find_all('article', class_='panel')
+
+    # Contador para estadísticas
+    noticias_guardadas = 0
+    noticias_omitidas = 0
     
     # Lista para almacenar las noticias
     noticias_info = []
@@ -526,6 +656,11 @@ def obtener_noticias_scraping_carmagazine_co_uk():
         # Extraer el título
         titulo_tag = articulo.find('h3', class_='title')
         titulo = titulo_tag.text.strip() if titulo_tag else "Sin título"
+
+         # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+        # if len(titulo) > 100:
+        #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+        #     continue  # Salta a la siguiente iteración
         
         # Extraer el enlace
         enlace_tag = titulo_tag.find('a') if titulo_tag else None
@@ -566,27 +701,36 @@ def obtener_noticias_scraping_carmagazine_co_uk():
 
 
         
-        noticias_info.append({
-            'titulo': titulo,
-            'link': enlace,
-            'img_url': img_url
-        }) 
+    #     noticias_info.append({
+    #         'titulo': titulo,
+    #         'link': enlace,
+    #         'img_url': img_url
+    #     }) 
     
+    # driver.quit()
+    
+    # # Imprimir las noticias procesadas
+    # print(f"Noticias procesadas: {len(noticias_info)} noticias.")
+    
+    # return noticias_info
+
+        _, created = NoticiaDiferente.objects.get_or_create(
+                titulo=titulo,
+                link=enlace,
+                img_url=img_url
+            )
+
+        if created:
+            noticias_guardadas += 1
+
     driver.quit()
-    
-    # Imprimir las noticias procesadas
-    print(f"Noticias procesadas: {len(noticias_info)} noticias.")
-    
-    return noticias_info
+    print(f"Noticias procesadas: {len(articulos)} | Guardadas: {noticias_guardadas} | Omitidas: {noticias_omitidas}")
 
 
 
 
 def obtener_noticias_scraping_autocar_co_uk():
-    from selenium import webdriver
-    from bs4 import BeautifulSoup
-    import time
-
+    
     # URL de la página de noticias de Autocar
     url = "https://www.autocar.co.uk/"
 
@@ -609,8 +753,13 @@ def obtener_noticias_scraping_autocar_co_uk():
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
+    # Contador para estadísticas
+    noticias_guardadas = 0
+    noticias_omitidas = 0
+
     # Encuentra todos los artículos de noticias
-    noticias = []
+    #noticias = []
+    articulos = soup.find_all('div', class_='views-row')
     for row in soup.find_all('div', class_='views-row'):
         # Extraer el enlace
         enlace = row.find('a', href=True)
@@ -629,6 +778,10 @@ def obtener_noticias_scraping_autocar_co_uk():
             a_tag = h2.find('a')  # Busca la etiqueta <a> dentro del <h2>
             if a_tag and a_tag.get_text(strip=True):  # Asegúrate de que exista texto
                 titulo = a_tag.get_text(strip=True)
+                 # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+                # if len(titulo) > 100:
+                #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+                #     continue  # Salta a la siguiente iteración
 
         # Caso 2: Si no se encuentra en <h2>, buscar en <div class="title">
         elif row.find('div', class_='title'):
@@ -636,12 +789,20 @@ def obtener_noticias_scraping_autocar_co_uk():
             a_tag = div_title.find('a')  # Busca la etiqueta <a> dentro del <div>
             if a_tag and a_tag.get_text(strip=True):  # Asegúrate de que exista texto
                 titulo = a_tag.get_text(strip=True)
+                 # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+                # if len(titulo) > 100:
+                #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+                #     continue  # Salta a la siguiente iteración
 
         # Caso 3: Buscar en <a class="cover-link"> (nuevo caso)
         else:
             cover_link = row.find('a', class_='cover-link')
             if cover_link and cover_link.get_text(strip=True):  # Asegúrate de que exista texto
                 titulo = cover_link.get_text(strip=True)
+                 # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+                # if len(titulo) > 100:
+                #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+                #     continue  # Salta a la siguiente iteración
 
 
 
@@ -668,34 +829,43 @@ def obtener_noticias_scraping_autocar_co_uk():
             img_url = 'https://www.autocar.co.uk/sites/autocar.co.uk/files/autocar_logo_150.jpg'
 
 
-        # Almacena la noticia en un diccionario
-        noticia = {
-            'titulo': titulo,
-            'link': enlace,
-            'img_url': img_url
-        }
-        noticias.append(noticia)
+    #     # Almacena la noticia en un diccionario
+    #     noticia = {
+    #         'titulo': titulo,
+    #         'link': enlace,
+    #         'img_url': img_url
+    #     }
+    #     noticias.append(noticia)
 
-        print(f"Título: {titulo}, Enlace: {enlace}")
+    #     print(f"Título: {titulo}, Enlace: {enlace}")
 
-    # Cierra el navegador
+    # # Cierra el navegador
+    # driver.quit()
+
+    # # Devuelve la lista de noticias
+    # return noticias
+
+        _, created = NoticiaDiferente.objects.get_or_create(
+                titulo=titulo,
+                link=enlace,
+                img_url=img_url
+            )
+
+        if created:
+            noticias_guardadas += 1
+
     driver.quit()
-
-    # Devuelve la lista de noticias
-    return noticias
+    print(f"Noticias procesadas: {len(articulos)} | Guardadas: {noticias_guardadas} | Omitidas: {noticias_omitidas}")
 
 
 # Ejemplo de uso
-noticias = obtener_noticias_scraping_autocar_co_uk()
-for noticia in noticias:
-    print(noticia)
+# noticias = obtener_noticias_scraping_autocar_co_uk()
+# for noticia in noticias:
+#     print(noticia)
 
 
 def obtener_noticias_scraping_autonews0():
-    from selenium import webdriver
-    from bs4 import BeautifulSoup
-    import time
-
+    
     # URL de la página de noticias de Autocar
     url = "https://www.autonews.com/"
 
@@ -760,10 +930,7 @@ def obtener_noticias_scraping_autonews0():
 
 
 def obtener_noticias_scraping_autonews():
-    from selenium import webdriver
-    from bs4 import BeautifulSoup
-    import time
-
+    
     # URL de la página de noticias de Autocar
     url = "https://www.autonews.com/"
 
@@ -786,6 +953,10 @@ def obtener_noticias_scraping_autonews():
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
+    # Contador para estadísticas
+    noticias_guardadas = 0
+    noticias_omitidas = 0
+
     # Lista para almacenar noticias
     noticias = []
 
@@ -795,6 +966,10 @@ def obtener_noticias_scraping_autonews():
         # Extraer el título
         titulo = bloque.get_text(strip=True)
         titulo = titulo.replace("Title", "", 1)  # Reemplaza solo la primera ocurrencia de "Title"
+         # Validación: Si el título es mayor a 100 caracteres, omitir el registro
+        # if len(titulo) > 100:
+        #     print(f"Noticia omitida: Título demasiado largo -> {titulo}")
+        #     continue  # Salta a la siguiente iteración
 
         # Extraer el enlace
         enlace = bloque['href']
@@ -866,19 +1041,31 @@ def obtener_noticias_scraping_autonews():
 
 
 
-        # Agregar la noticia a la lista
-        noticia = {
-            'titulo': titulo,
-            'link': enlace,
-            'img_url': img_url
-        }
-        noticias.append(noticia)
+    #     # Agregar la noticia a la lista
+    #     noticia = {
+    #         'titulo': titulo,
+    #         'link': enlace,
+    #         'img_url': img_url
+    #     }
+    #     noticias.append(noticia)
 
-    # Cierra el navegador
+    # # Cierra el navegador
+    # driver.quit()
+
+    # # Devuelve la lista de noticias
+    # return noticias
+
+        _, created = NoticiaDiferente.objects.get_or_create(
+                titulo=titulo,
+                link=enlace,
+                img_url=img_url
+            )
+
+        if created:
+            noticias_guardadas += 1
+
     driver.quit()
-
-    # Devuelve la lista de noticias
-    return noticias
+    print(f"Noticias procesadas: {len(bloques)} | Guardadas: {noticias_guardadas} | Omitidas: {noticias_omitidas}")
 
 
 

@@ -1,10 +1,31 @@
 from django.core.management.base import BaseCommand
 from cars_reviews_app.models import Noticia, NoticiaDiferente  # Asegúrate de importar el modelo
-from cars_reviews_app.scraper import obtener_noticias_scraping, obtener_noticias_scraping_carscoop, obtener_noticias_scraping_insideevs, obtener_noticias_scraping_carmagazine_co_uk, obtener_noticias_scraping_autocar_co_uk, obtener_noticias_scraping_autonews  # Importa tu función de scraping
+from cars_reviews_app.scraper import obtener_noticias_scraping, obtener_noticias_scraping_carscoop, obtener_noticias_scraping_insideevs
+from cars_reviews_app.scraper import obtener_noticias_scraping_carmagazine_co_uk, obtener_noticias_scraping_autocar_co_uk
+from cars_reviews_app.scraper import obtener_noticias_scraping_autonews , obtener_noticias_scraping_directo  # Importa tu función de scraping
 
 # cars_reviews_app/management/commands/populate_noticias.py
 
 class Command(BaseCommand):
+    help = 'Obtiene noticias desde Motorpasion y las guarda en la base de datos'
+
+    def handle(self, *args, **kwargs):
+        self.stdout.write("Iniciando scraping de Motorpasion...")
+        
+        # Llama a la función para realizar el scraping y guardar en la BD
+        obtener_noticias_scraping_directo()
+        obtener_noticias_scraping_carscoop()
+        obtener_noticias_scraping_insideevs()
+        obtener_noticias_scraping_carmagazine_co_uk()
+        obtener_noticias_scraping_autocar_co_uk()
+        obtener_noticias_scraping_autonews()
+
+
+        
+        self.stdout.write(self.style.SUCCESS('Proceso completado: Noticias guardadas correctamente.'))
+
+
+""" class Command_antigua(BaseCommand):
     help = 'Obtiene noticias desde Motorpasion y Carscoops, y las guarda en la base de datos'
 
     def handle(self, *args, **kwargs):
@@ -50,7 +71,7 @@ class Command(BaseCommand):
             print(f"Guardando noticia de Motorpasion: {noticia['titulo']}")  # Para depurar
             
             # Truncar el título si excede los 100 caracteres
-            titulo_truncado = noticia['titulo'][:90] if len(noticia['titulo']) > 100 else noticia['titulo']
+            titulo_truncado = noticia['titulo'][:20] if len(noticia['titulo']) > 20 else noticia['titulo']
             
             NoticiaDiferente.objects.get_or_create(
                 titulo=titulo_truncado,
@@ -61,8 +82,9 @@ class Command(BaseCommand):
         # Guarda las noticias de Carscoops en la base de datos
         for noticia in noticias_carscoop:
             print(f"Guardando noticia de Carscoops: {noticia['titulo']}")  # Imprime para depurar
+            titulo_truncado = noticia['titulo'][:20] if len(noticia['titulo']) > 20 else noticia['titulo']
             NoticiaDiferente.objects.get_or_create(
-                titulo=noticia['titulo'],
+                titulo=titulo_truncado, #noticia['titulo'],
                 link=noticia['link'],
                 img_url=noticia['img_url']
             )
@@ -70,8 +92,9 @@ class Command(BaseCommand):
         # Guarda las noticias de Carscoops en la base de datos
         for noticia in noticias_insideves:
             print(f"Guardando noticia de Insideeves: {noticia['titulo']}")  # Imprime para depurar
+            titulo_truncado = noticia['titulo'][:20] if len(noticia['titulo']) > 20 else noticia['titulo']
             NoticiaDiferente.objects.get_or_create(
-                titulo=noticia['titulo'],
+                titulo=titulo_truncado, #noticia['titulo'],
                 link=noticia['link'],
                 img_url=noticia['img_url']
             )
@@ -79,8 +102,9 @@ class Command(BaseCommand):
         # Guarda las noticias de Carscoops en la base de datos
         for noticia in noticias_carmagazine_co_uk:
             print(f"Guardando noticia de Carmagazine_co_uk: {noticia['titulo']}")  # Imprime para depurar
+            titulo_truncado = noticia['titulo'][:20] if len(noticia['titulo']) > 20 else noticia['titulo']
             NoticiaDiferente.objects.get_or_create(
-                titulo=noticia['titulo'],
+                titulo=titulo_truncado, #noticia['titulo'],
                 link=noticia['link'],
                 img_url=noticia['img_url']
             )
@@ -97,8 +121,9 @@ class Command(BaseCommand):
         for noticia in noticias_autocar_co_uk:
             if noticia['titulo'] and noticia['link']:
                 print(f"Guardando noticia de Autocar_co_uk: {noticia['titulo']}")  # Imprime para depurar
+                titulo_truncado = noticia['titulo'][:20] if len(noticia['titulo']) > 20 else noticia['titulo']
                 NoticiaDiferente.objects.get_or_create(
-                    titulo=noticia['titulo'],
+                    titulo=titulo_truncado, #noticia['titulo'],
                     link=noticia['link'],
                     img_url=noticia.get('img_url')
                 )
@@ -108,8 +133,9 @@ class Command(BaseCommand):
         for noticia in noticias_autonews:
             if noticia['titulo'] and noticia['link']:
                 print(f"Guardando noticia de Autonews: {noticia['titulo']}")  # Imprime para depurar
+                titulo_truncado = noticia['titulo'][:20] if len(noticia['titulo']) > 20 else noticia['titulo']
                 NoticiaDiferente.objects.get_or_create(
-                    titulo=noticia['titulo'],
+                    titulo=titulo_truncado, #noticia['titulo'],
                     link=noticia['link'],
                     img_url=noticia.get('img_url')
                 )
@@ -135,7 +161,7 @@ class Commandold(BaseCommand):
                 titulo=noticia['titulo'],
                 link=noticia['link']
             )
-        self.stdout.write(self.style.SUCCESS('Noticias guardadas correctamente.'))
+        self.stdout.write(self.style.SUCCESS('Noticias guardadas correctamente.')) """
 
 
 

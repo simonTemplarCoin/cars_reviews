@@ -230,9 +230,9 @@ def obtener_noticias_scraping_directo():
     time.sleep(5)
 
     # Guarda el HTML de la página en un archivo
-    with open("pagina_guardada.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    print("HTML guardado correctamente en 'pagina_guardada.html'")
+    # with open("pagina_guardada.html", "w", encoding="utf-8") as f:
+    #     f.write(driver.page_source)
+    # print("HTML guardado correctamente en 'pagina_guardada.html'")
 
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -404,9 +404,9 @@ def obtener_noticias_scraping_carscoop():
     time.sleep(5)  # Ajusta el tiempo según sea necesario
     
     # Guarda el HTML de la página en un archivo
-    with open("pagina_guardada_carscoops.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    print("HTML guardado correctamente en 'pagina_guardada_carscoops.html'")
+    # with open("pagina_guardada_carscoops.html", "w", encoding="utf-8") as f:
+    #     f.write(driver.page_source)
+    # print("HTML guardado correctamente en 'pagina_guardada_carscoops.html'")
     
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -553,9 +553,9 @@ def obtener_noticias_scraping_insideevs():
     time.sleep(5)  # Ajusta el tiempo según sea necesario
     
     # Guarda el HTML de la página en un archivo
-    with open("pagina_guardada_insideevs.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    print("HTML guardado correctamente en 'pagina_guardada_insideevs.html'")
+    # with open("pagina_guardada_insideevs.html", "w", encoding="utf-8") as f:
+    #     f.write(driver.page_source)
+    # print("HTML guardado correctamente en 'pagina_guardada_insideevs.html'")
     
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -635,9 +635,9 @@ def obtener_noticias_scraping_carmagazine_co_uk():
     time.sleep(5)  # Ajusta el tiempo según sea necesario
     
     # Guarda el HTML de la página en un archivo
-    with open("pagina_guardada_carmagazine_co_uk.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    print("HTML guardado correctamente en 'pagina_guardada_carmagazine_co_uk.html'")
+    # with open("pagina_guardada_carmagazine_co_uk.html", "w", encoding="utf-8") as f:
+    #     f.write(driver.page_source)
+    # print("HTML guardado correctamente en 'pagina_guardada_carmagazine_co_uk.html'")
     
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -746,9 +746,9 @@ def obtener_noticias_scraping_autocar_co_uk():
     time.sleep(5)  # Ajusta el tiempo según sea necesario
 
     # Guarda el HTML de la página en un archivo
-    with open("pagina_guardada_autocar_co_uk.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    print("HTML guardado correctamente en 'pagina_guardada_autocar_co_uk.html'")
+    # with open("pagina_guardada_autocar_co_uk.html", "w", encoding="utf-8") as f:
+    #     f.write(driver.page_source)
+    # print("HTML guardado correctamente en 'pagina_guardada_autocar_co_uk.html'")
 
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -946,9 +946,9 @@ def obtener_noticias_scraping_autonews():
     time.sleep(5)
 
     # Guarda el HTML de la página en un archivo
-    with open("pagina_guardada_autonews.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    print("HTML guardado correctamente en 'pagina_guardada_autonews.html'")
+    # with open("pagina_guardada_autonews.html", "w", encoding="utf-8") as f:
+    #     f.write(driver.page_source)
+    # print("HTML guardado correctamente en 'pagina_guardada_autonews.html'")
 
     # Obtén el contenido de la página después de cargar JavaScript
     soup = BeautifulSoup(driver.page_source, 'html.parser')
